@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: finledger
+      POSTGRES_USER: finledger
+      POSTGRES_PASSWORD: finledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finledger -d finledger"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dev
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://finledger:finledger@db:5432/finledger
+      RUN_MIGRATIONS: "1"
+      PORT: "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -1,0 +1,72 @@
+# -----------------------------------------------------------------------------
+# FinLedger API - Docker build context ignore
+# Stack: FastAPI + Alembic + Postgres + multi-stage (dev/prod)
+# -----------------------------------------------------------------------------
+
+# Git / CI metadata (no se necesita dentro de la imagen)
+.git/
+.github/
+
+# Secrets / env (nunca al contexto de build)
+.env
+.env.*
+!.env.example
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+
+# Ruff / MyPy / Pytest caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Coverage / reports
+.coverage
+coverage.xml
+htmlcov/
+
+# Packaging / build artifacts
+*.egg-info/
+build/
+dist/
+
+# Virtualenvs locales
+.venv/
+venv/
+ENV/
+env/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Docker compose overrides/local
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# DB dumps / data folders (por si generas backups locales)
+pgdata/
+postgres-data/
+*.sql
+*.dump
+*.bak
+
+# Node (por si el repo crece a monorepo o agregas tooling)
+node_modules/
+
+# Archivos pesados que a veces terminan en el repo por accidente
+*.zip
+*.tar
+*.tar.gz
+*.7z

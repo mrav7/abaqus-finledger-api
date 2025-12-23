@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: finledger
+          POSTGRES_USER: finledger
+          POSTGRES_PASSWORD: finledger
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U finledger -d finledger"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+psycopg://finledger:finledger@localhost:5432/finledger
+      JWT_SECRET: ci-secret
+      JWT_ALG: HS256
+      JWT_EXPIRES_MIN: "30"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run DB migrations
+        run: |
+          alembic -c alembic.ini upgrade head
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+
+      - name: Tests
+        run: |
+          pytest -q
