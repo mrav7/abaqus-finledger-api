@@ -5,8 +5,6 @@ services:
       POSTGRES_DB: finledger
       POSTGRES_USER: finledger
       POSTGRES_PASSWORD: finledger
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -27,7 +25,7 @@ services:
       RUN_MIGRATIONS: "1"
       PORT: "8000"
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy

@@ -52,11 +52,14 @@ def list_accounts_by_customer(
     if not customer or not customer.is_active:
         raise HTTPException(status_code=404, detail="Customer not found")
 
-    rows = db.execute(
-        select(Account)
-        .where(Account.customer_id == customer_id)
-        .where(Account.is_active.is_(True))
-        .order_by(Account.created_at.desc())
-    ).scalars().all()
-
+    rows = (
+        db.execute(
+            select(Account)
+            .where(Account.customer_id == customer_id)
+            .where(Account.is_active.is_(True))
+            .order_by(Account.created_at.desc())
+        )
+        .scalars()
+        .all()
+    )
     return list(rows)
