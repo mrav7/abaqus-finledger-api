@@ -18,5 +18,4 @@ class Customer(Base):
 
     created_at: Mapped["DateTime"] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    # se completa cuando exista Account
     accounts = relationship("Account", back_populates="customer")

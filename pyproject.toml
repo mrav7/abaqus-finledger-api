@@ -31,6 +31,9 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+filterwarnings = [
+  "ignore:'crypt' is deprecated.*:DeprecationWarning",
+]
 
 [build-system]
 requires = ["setuptools>=69", "wheel"]
